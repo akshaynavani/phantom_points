@@ -16,6 +16,10 @@ find_package(Threads REQUIRED)
 add_library(phantom
   src/geometry.cpp
   src/scene.cpp
+  src/config.cpp
+  src/noise.cpp
+  src/lidar.cpp
+  src/params.cpp
 )
 target_include_directories(phantom PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(phantom PUBLIC Threads::Threads)
