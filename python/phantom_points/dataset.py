@@ -39,10 +39,14 @@ def build_targets(src: ScanData, ref: ScanData, columns: int) -> Dict[str, np.nd
     ref_keys, ref_range, ref_int = ref_keys[order], ref_range[order], ref_int[order]
 
     src_keys = _cell_keys(src, columns)
+    if len(ref_keys) == 0:
+        # Reference saw nothing at all: every source point should be dropped.
+        ref_keys = np.array([-1], np.int64)
+        ref_range = np.zeros(1, np.float32)
+        ref_int = np.zeros(1, np.float32)
     pos = np.searchsorted(ref_keys, src_keys)
-    pos_c = np.clip(pos, 0, max(len(ref_keys) - 1, 0))
-    matched = (len(ref_keys) > 0) & (pos < len(ref_keys))
-    matched &= ref_keys[pos_c] == src_keys if len(ref_keys) else matched
+    pos_c = np.clip(pos, 0, len(ref_keys) - 1)
+    matched = (pos < len(ref_keys)) & (ref_keys[pos_c] == src_keys)
     src_spurious = (src.flags & FLAG_SPURIOUS) != 0 if src.flags is not None else np.zeros(len(src), bool)
 
     d_range = np.where(matched, ref_range[pos_c] - src.range, 0.0).astype(np.float32)
