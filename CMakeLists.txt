@@ -21,6 +21,7 @@ add_library(phantom
   src/lidar.cpp
   src/params.cpp
   src/pointnet.cpp
+  src/io.cpp
 )
 target_include_directories(phantom PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(phantom PUBLIC Threads::Threads)
