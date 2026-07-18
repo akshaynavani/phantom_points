@@ -31,3 +31,11 @@ if(MSVC)
 else()
   target_compile_options(phantom PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+add_executable(phantom_gen apps/phantom_gen.cpp)
+target_link_libraries(phantom_gen PRIVATE phantom)
+
+# std::filesystem needs an extra library on older GCC.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.1)
+  target_link_libraries(phantom PUBLIC stdc++fs)
+endif()
