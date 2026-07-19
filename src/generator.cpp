@@ -41,7 +41,8 @@ BatchGenerator::BatchGenerator(GeneratorOptions opts)
         // The reference sensor inherits everything from the main config and overrides
         // only what the pair config specifies (typically noise / intensity response).
         Config merged = config_;
-        for (const auto& kv : Config::load(opts_.pair_config_path).values()) merged.set(kv.first, kv.second);
+        const Config pair = Config::load(opts_.pair_config_path);  // must outlive the loop
+        for (const auto& kv : pair.values()) merged.set(kv.first, kv.second);
         ref_sim_ = std::make_unique<LidarSimulator>(lidar_params_from_config(merged));
         const LidarParams& a = sim_.params();
         const LidarParams& b = ref_sim_->params();
